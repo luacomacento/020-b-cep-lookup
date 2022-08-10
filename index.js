@@ -7,7 +7,7 @@ const app = express();
 
 app.use(express.json());
 
-app.get('/ping', (req, res) => res.status(200).json({message: 'pong!'}));
+app.get('/ping', (_req, res) => res.status(200).json({ message: 'pong!' }));
 app.use('/cep', cepRoute);
 
 app.use(errorMiddleware);
