@@ -1,12 +1,14 @@
-const CustomError = require("../errors/CustomError");
+const NotFoundError = require('../errors/NotFoundError');
+const InvalidError = require('../errors/InvalidError');
 const Joi = require('joi');
 
 const validators = {
-  validateCep: async (req, _res, next) => {
+  validateCep: async (req, res, next) => {
     const { cep } = req.params;
     const cepRegex = /^\d{5}-?\d{3}$/;
     if (!cepRegex.test(cep)) {
-      throw new CustomError(400, 'invalidData', 'CEP inválido');
+      throw new NotFoundError('Cep inválido');
+      // throw new CustomError(400, 'invalidData', 'CEP inválido');
     }
 
     next();
@@ -14,7 +16,7 @@ const validators = {
 
   validateBody: async (req, res, next) => {
     const schema = Joi.object({
-      cep: Joi.string().regex(/^\d{5}-?\d{3}$/).required(),
+      cep: Joi.string().pattern(/^\d{5}-?\d{3}$/).required(),
       logradouro: Joi.string().required(),
       bairro: Joi.string().required(),
       localidade: Joi.string().required(),
@@ -24,7 +26,8 @@ const validators = {
     const {error, value} = schema.validate(req.body);
   
     if (error) {
-      throw new CustomError(400, 'invalidData', error.details[0].message)
+      throw new InvalidError(error.details[0].message);
+      // throw new CustomError(400, 'invalidData', error.details[0].message)
     }
 
     next();

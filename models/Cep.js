@@ -11,6 +11,11 @@ const Cep = {
     return result;
   },
 
+  getAll: async () => {
+    const [result] = await connection.query(`SELECT * from cep_lookup.ceps`);
+    return result;
+  },
+
   create: async (address) => {
     const {cep, logradouro, bairro, localidade, uf} = address;
     const [{ affectedRows }] = await connection.query(`
